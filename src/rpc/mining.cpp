@@ -229,6 +229,9 @@ UniValue getmininginfo(const JSONRPCRequest& request)
     } else {
         obj.push_back(Pair("warnings",     GetWarnings("statusbar")));
     }
+    statsClient.gauge("network.exahashesPerSecond", getnetworkhashps(request).get_real() / 1e18);
+    statsClient.gauge("network.difficulty", (double)GetDifficulty(chainActive.Tip()));
+    
     return obj;
 }
 
