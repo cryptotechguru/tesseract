@@ -1,6 +1,6 @@
 #! /bin/sh
 
-sed -i 's/equibit/ocean/g' *.sln
-find . -name "*.vcxproj*" | xargs sed -i 's/equibit/ocean/g'
-rename 's/equibit/ocean/' *
-rename 's/equibit/ocean/' */*
+sed -i 's/ocean/tesseract/g' *.sln
+find . -name "*.vcxproj*" | xargs sed -i 's/ocean/tesseract/g'
+rename 's/ocean/tesseract/' *
+rename 's/ocean/tesseract/' */*
