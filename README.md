@@ -1,9 +1,9 @@
 Tesseract Core 
 =============
 
-[![Build Status](https://travis-ci.org/project-tesseract/tesseract-core.svg?branch=dev)](https://travis-ci.org/project-tesseract/tesseract-core)
+[![Build Status](https://travis-ci.org/cryptotechguru/tesseract-core.svg?branch=master)](https://travis-ci.org/cryptotechguru/tesseract-core)
 
-https://tesseract.org
+https://tesseract-crypto.io (coming soon!)
 
 What is Tesseract?
 ----------------
