@@ -14,13 +14,13 @@
  * target servers or GUI users specifically.
  */
 const std::string CLIENT_NAME("Satoshi");
-#else // BUILD_OCN
+#else // BUILD_TESR
 /**
  * Name of client reported in the 'version' message. Report the same name
- * for both oceand and ocean-qt, to make it harder for attackers to
+ * for both tesseractd and tesseract-qt, to make it harder for attackers to
  * target servers or GUI users specifically.
  */
-const std::string CLIENT_NAME("OCEAN");
+const std::string CLIENT_NAME("Tesseract");
 #endif // END_BUILD
 
 /**

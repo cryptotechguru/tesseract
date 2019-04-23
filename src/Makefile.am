@@ -65,11 +65,11 @@ TESTS =
 BENCHMARKS =
 
 if BUILD_BITCOIND
-  bin_PROGRAMS += oceand
+  bin_PROGRAMS += tesseractd
 endif
 
 if BUILD_BITCOIN_UTILS
-  bin_PROGRAMS += ocean-cli ocean-tx
+  bin_PROGRAMS += tesseract-cli tesseract-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
@@ -398,16 +398,16 @@ nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # bitcoind binary #
-oceand_SOURCES = bitcoind.cpp
-oceand_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-oceand_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-oceand_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+tesseractd_SOURCES = bitcoind.cpp
+tesseractd_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+tesseractd_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+tesseractd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-oceand_SOURCES += bitcoind-res.rc
+tesseractd_SOURCES += bitcoind-res.rc
 endif
 
-oceand_LDADD = \
+tesseractd_LDADD = \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_COMMON) \
   $(LIBUNIVALUE) \
@@ -421,38 +421,38 @@ oceand_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-oceand_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+tesseractd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
 
 # bitcoin-cli binary #
-ocean_cli_SOURCES = bitcoin-cli.cpp
-ocean_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-ocean_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-ocean_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+tesseract_cli_SOURCES = bitcoin-cli.cpp
+tesseract_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
+tesseract_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+tesseract_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-ocean_cli_SOURCES += bitcoin-cli-res.rc
+tesseract_cli_SOURCES += bitcoin-cli-res.rc
 endif
 
-ocean_cli_LDADD = \
+tesseract_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO)
 
-ocean_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+tesseract_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
 # bitcoin-tx binary #
-ocean_tx_SOURCES = bitcoin-tx.cpp
-ocean_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-ocean_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-ocean_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+tesseract_tx_SOURCES = bitcoin-tx.cpp
+tesseract_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+tesseract_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+tesseract_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-ocean_tx_SOURCES += bitcoin-tx-res.rc
+tesseract_tx_SOURCES += bitcoin-tx-res.rc
 endif
 
-ocean_tx_LDADD = \
+tesseract_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_SERVER) \
@@ -461,7 +461,7 @@ ocean_tx_LDADD = \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-ocean_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+tesseract_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # bitcoinconsensus library #

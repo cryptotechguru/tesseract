@@ -35,7 +35,7 @@ public:
     {
 #ifdef BUILD_BTC
         nRPCPort = 8332;
-#else // BUILD_OCN
+#else // BUILD_TESR
         nRPCPort = 8330;
 #endif // END_BUILD
     }
@@ -51,7 +51,7 @@ public:
     {
 #ifdef BUILD_BTC
         nRPCPort = 18332;
-#else // BUILD_OCN
+#else // BUILD_TESR
         nRPCPort = 18330;
 #endif // END_BUILD
         strDataDir = "testnet3";
@@ -68,7 +68,7 @@ public:
     {
 #ifdef BUILD_BTC
         nRPCPort = 18443;
-#else // BUILD_OCN
+#else // BUILD_TESR
         nRPCPort = 18440;
 #endif // END_BUILD
         strDataDir = "regtest";

@@ -1,1 +1,1 @@
-OCEAN related files go here
+Tesseract related files go here

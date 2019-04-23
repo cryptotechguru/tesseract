@@ -188,7 +188,7 @@ class EstimateFeeTest(BitcoinTestFramework):
             self.memutxo = newmem
 
     def run_test(self):
-        raise SkipTest("Disabled")  # OCN_TODO: disabled test
+        raise SkipTest("Disabled")  # TESR_TODO: disabled test
         self.log.info("This test is time consuming, please be patient")
         self.log.info("Splitting inputs so we can generate tx's")
 

@@ -52,8 +52,8 @@ std::string HelpMessageCli()
     strUsage += HelpMessageOpt("-stdin", _("Read extra arguments from standard input, one per line until EOF/Ctrl-D (recommended for sensitive information such as passphrases).  When combined with -stdinrpcpass, the first line from standard input is used for the RPC password."));
 #ifdef BUILD_BTC 
     strUsage += HelpMessageOpt("-rpcwallet=<walletname>", _("Send RPC for non-default wallet on RPC server (argument is wallet filename in bitcoind directory, required if bitcoind/-Qt runs with multiple wallets)"));
-#else  // BUILD_OCN
-    strUsage += HelpMessageOpt( "-rpcwallet=<walletname>", _( "Send RPC for non-default wallet on RPC server (argument is wallet filename in oceand directory, required if oceand/-Qt runs with multiple wallets)" ) );
+#else  // BUILD_TESR
+    strUsage += HelpMessageOpt( "-rpcwallet=<walletname>", _( "Send RPC for non-default wallet on RPC server (argument is wallet filename in tesseractd directory, required if tesseractd/-Qt runs with multiple wallets)" ) );
 #endif // END_BUILD
 
     return strUsage;
@@ -100,13 +100,13 @@ static int AppInitRPC(int argc, char* argv[])
 
             strUsage += "\n" + HelpMessageCli();
         }
-#else // BUILD_OCN
+#else // BUILD_TESR
         if(!gArgs.IsArgSet( "-version" )) {
             strUsage += "\n" + _( "Usage:" ) + "\n" +
-                "  ocean-cli [options] <command> [params]  " + strprintf( _( "Send command to %s" ), _( PACKAGE_NAME ) ) + "\n" +
-                "  ocean-cli [options] -named <command> [name=value] ... " + strprintf( _( "Send command to %s (with named arguments)" ), _( PACKAGE_NAME ) ) + "\n" +
-                "  ocean-cli [options] help                " + _( "List commands" ) + "\n" +
-                "  ocean-cli [options] help <command>      " + _( "Get help for a command" ) + "\n";
+                "  tesseract-cli [options] <command> [params]  " + strprintf( _( "Send command to %s" ), _( PACKAGE_NAME ) ) + "\n" +
+                "  tesseract-cli [options] -named <command> [name=value] ... " + strprintf( _( "Send command to %s (with named arguments)" ), _( PACKAGE_NAME ) ) + "\n" +
+                "  tesseract-cli [options] help                " + _( "List commands" ) + "\n" +
+                "  tesseract-cli [options] help <command>      " + _( "Get help for a command" ) + "\n";
 
             strUsage += "\n" + HelpMessageCli();
         }
@@ -462,8 +462,8 @@ int CommandLineRPC(int argc, char *argv[])
                         if (errCode.isNum() && errCode.get_int() == RPC_WALLET_NOT_SPECIFIED) {
 #ifdef BUILD_BTC
                             strPrint += "\nTry adding \"-rpcwallet=<filename>\" option to bitcoin-cli command line.";
-#else  // BUILD_OCN
-                            strPrint += "\nTry adding \"-rpcwallet=<filename>\" option to ocean-cli command line.";
+#else  // BUILD_TESR
+                            strPrint += "\nTry adding \"-rpcwallet=<filename>\" option to tesseract-cli command line.";
 #endif // END_BUILD
                         }
                     }

@@ -557,7 +557,7 @@ class CNetMessage {
 private:
 #ifdef BUILD_BTC
     mutable CHash256 hasher;
-#else // BUILD_OCN
+#else // BUILD_TESR
     mutable CSHA3Hash256 hasher;
 #endif // END_BUILD
     mutable uint256 data_hash;

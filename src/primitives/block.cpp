@@ -15,7 +15,7 @@ uint256 CBlockHeader::GetHash() const
 {
 #ifdef BUILD_BTC
     return SerializeHash(*this);
-#else  // BUILD_OCN
+#else  // BUILD_TESR
     return SHA3SerializeHash(*this);
 #endif // END_BUILD
 }

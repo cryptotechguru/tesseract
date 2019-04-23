@@ -9,10 +9,10 @@ src/test/test_bitcoin
 src/test/test_bitcoin_fuzzy
 src/qt/test/test_bitcoin-qt
 
-src/ocean
-src/oceand
-src/ocean-cli
-src/ocean-tx
+src/tesseract
+src/tesseractd
+src/tesseract-cli
+src/tesseract-tx
 src/test/test_equibit
 src/test/test_equibit_fuzzy
 src/qt/test/test_equibit-qt

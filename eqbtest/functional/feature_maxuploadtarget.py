@@ -40,7 +40,7 @@ class MaxUploadTest(BitcoinTestFramework):
         self.utxo_cache = []
 
     def run_test(self):
-        raise SkipTest("Disabled")  # OCN_TODO: disabled test
+        raise SkipTest("Disabled")  # TESR_TODO: disabled test
         # Before we connect anything, we first set the time on the node
         # to be in the past, otherwise things break because the CNode
         # time counters can't be reset backward after initialization

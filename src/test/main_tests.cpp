@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(test_combiner_all)
     Test.disconnect(&ReturnTrue);
     BOOST_CHECK(Test());
 }
-#else  // BUILD_OCN
+#else  // BUILD_TESR
 
 static const CAmount    MAX_COINBASE = 52.5 * COIN;
 

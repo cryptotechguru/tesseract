@@ -32,7 +32,7 @@ void CBlockHeaderAndShortTxIDs::FillShortTxIDSelector() const {
     stream << header << nonce;
 #ifdef BUILD_BTC
     CSHA256 hasher;
-#else  // BUILD_OCN
+#else  // BUILD_TESR
     CSHA3 hasher;
 #endif // END_BUILD
     hasher.Write((unsigned char*)&(*stream.begin()), stream.end() - stream.begin());

@@ -62,11 +62,11 @@ static int AppInitRawTx(int argc, char* argv[])
               "  bitcoin-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded bitcoin transaction") + "\n" +
               "  bitcoin-tx [options] -create [commands]   " + _("Create hex-encoded bitcoin transaction") + "\n" +
               "\n";
-#else // BUILD_OCN
-        std::string strUsage = strprintf( _( "%s ocean-tx utility version" ), _( PACKAGE_NAME ) ) + " " + FormatFullVersion() + "\n\n" +
+#else // BUILD_TESR
+        std::string strUsage = strprintf( _( "%s tesseract-tx utility version" ), _( PACKAGE_NAME ) ) + " " + FormatFullVersion() + "\n\n" +
             _( "Usage:" ) + "\n" +
-            "  ocean-tx [options] <hex-tx> [commands]  " + _( "Update hex-encoded ocean transaction" ) + "\n" +
-            "  ocean-tx [options] -create [commands]   " + _( "Create hex-encoded ocean transaction" ) + "\n" +
+            "  tesseract-tx [options] <hex-tx> [commands]  " + _( "Update hex-encoded tesseract transaction" ) + "\n" +
+            "  tesseract-tx [options] -create [commands]   " + _( "Create hex-encoded tesseract transaction" ) + "\n" +
             "\n";
 #endif // END_BUILD
 

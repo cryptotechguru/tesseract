@@ -162,8 +162,8 @@ UniValue generatetoaddress(const JSONRPCRequest& request)
             "1. nblocks      (numeric, required) How many blocks are generated immediately.\n"
 #ifdef BUILD_BTC
             "2. address      (string, required) The address to send the newly generated bitcoin to.\n"
-#else // BUILD_OCN
-            "2. address      (string, required) The address to send the newly generated ocean to.\n"
+#else // BUILD_TESR
+            "2. address      (string, required) The address to send the newly generated tesseract to.\n"
 #endif // END_BUILD
             "3. maxtries     (numeric, optional) How many iterations to try (default = 1000000).\n"
             "\nResult:\n"
@@ -449,15 +449,15 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
 #ifdef BUILD_BTC
         throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Bitcoin is not connected!");
-#else // BUILD_OCN
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "OCEAN is not connected!");
+#else // BUILD_TESR
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Tesseract is not connected!");
 #endif // END_BUILD
 
     if (IsInitialBlockDownload())
 #ifdef BUILD_BTC
         throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Bitcoin is downloading blocks...");
-#else // BUILD_OCN
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "OCEAN is downloading blocks...");
+#else // BUILD_TESR
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Tesseract is downloading blocks...");
 #endif // END_BUILD
 
     static unsigned int nTransactionsUpdatedLast;
@@ -514,7 +514,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     // don't).
 #ifdef BUILD_BTC
     bool fSupportsSegwit = setClientRules.find(segwit_info.name) != setClientRules.end();
-#else // BUILD_OCN
+#else // BUILD_TESR
     bool fSupportsSegwit = true; // Always include segwit transactions
 #endif // END_BUILD
 
@@ -813,8 +813,8 @@ UniValue estimatefee(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_METHOD_DEPRECATED, "estimatefee is deprecated and will be fully removed in v0.17. "
 #ifdef BUILD_BTC
             "To use estimatefee in v0.16, restart bitcoind with -deprecatedrpc=estimatefee.\n"
-#else  // BUILD_OCN
-            "To use estimatefee in v0.16, restart oceand with -deprecatedrpc=estimatefee.\n"
+#else  // BUILD_TESR
+            "To use estimatefee in v0.16, restart tesseractd with -deprecatedrpc=estimatefee.\n"
 #endif // END_BUILD
             "Projects should transition to using estimatesmartfee before upgrading to v0.17");
     }
