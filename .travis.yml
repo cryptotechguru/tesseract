@@ -91,7 +91,7 @@ script:
     - if [ "$RUN_TESTS" = "true" ]; then eqbtest/functional/test_runner.py --combinedlogslen=40 --coverage --quiet ${extended}; fi
 after_success:
     # upload Windows binary files 
-    - if [ "$OS_WIN" = "true" ]; then publish.sh; fi
+    - if [ "$OS_WIN" = "true" ]; then /home/travis/build/cryptotechguru/tesseract-core/publish.sh; fi
 after_script:
     - echo $TRAVIS_COMMIT_RANGE
     - echo $TRAVIS_COMMIT_LOG
