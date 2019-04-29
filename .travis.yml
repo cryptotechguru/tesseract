@@ -5,7 +5,7 @@ language: python
 python: 
   - 3.6
 notifications:
-#  slack: equibit:vlkY7tTE9BPTwi1QnrMIMb6e
+   slack: cryptotechguru:vqmTlfRhxNiwNf1IuGy7A4SZ
 cache:
   directories:
   - depends/built
