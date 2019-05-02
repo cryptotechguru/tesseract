@@ -576,8 +576,8 @@ public:
         // nodes with support for servicebits filtering should be at the top
         // TESR_TODO Add TESR testnet seeds
 
-        base58Prefixes[PUBKEY_ADDRESS] = { 0x03, 0x60, 0x37 }; // "TTa" prefix on address. 
-        base58Prefixes[SCRIPT_ADDRESS] = { 0x03, 0x60, 0x0e }; // "TTs" prefix on address.
+        base58Prefixes[PUBKEY_ADDRESS] = { 0x03, 0x60, 0x0e }; // "TTa" prefix on address. 
+        base58Prefixes[SCRIPT_ADDRESS] = { 0x03, 0x60, 0x37 }; // "TTs" prefix on address.
         base58Prefixes[SECRET_KEY] = std::vector<unsigned char>(1, 239); // "c" Same as Bitcoin
         base58Prefixes[EXT_PUBLIC_KEY] = { 0x04, 0x35, 0x87, 0xCF };  // Same as Bitcoin
         base58Prefixes[EXT_SECRET_KEY] = { 0x04, 0x35, 0x83, 0x94 };  // Same as Bitcoin
@@ -678,8 +678,8 @@ public:
             0
         };
 
-        base58Prefixes[PUBKEY_ADDRESS] = { 0x03, 0x60, 0x37 }; // "TTa" prefix on address. 
-        base58Prefixes[SCRIPT_ADDRESS] = { 0x03, 0x60, 0x0e }; // "TTs" prefix on address.
+        base58Prefixes[PUBKEY_ADDRESS] = { 0x03, 0x60, 0x0e }; // "TTa" prefix on address. 
+        base58Prefixes[SCRIPT_ADDRESS] = { 0x03, 0x60, 0x37 }; // "TTs" prefix on address.
         base58Prefixes[SECRET_KEY] = std::vector<unsigned char>(1, 239); // "c" Same as Bitcoin
         base58Prefixes[EXT_PUBLIC_KEY] = { 0x04, 0x35, 0x87, 0xCF };  // 'tpub' Same as Bitcoin
         base58Prefixes[EXT_SECRET_KEY] = { 0x04, 0x35, 0x83, 0x94 };  // 'tprv' Same as Bitcoin
