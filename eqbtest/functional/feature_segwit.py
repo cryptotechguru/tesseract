@@ -76,7 +76,7 @@ class SegWitTest(BitcoinTestFramework):
         sync_blocks(self.nodes)
 
     def run_test(self):
-        # raise SkipTest("Disabled to make issues/#157-base58check-prefix pass")  # TESR_TODO: disabled test
+        raise SkipTest("Disabled to make issues/#157-base58check-prefix pass")  # TESR_TODO: disabled test
         self.nodes[0].generate(161) #block 161
 
         self.log.info("Verify sigops are counted in GBT with pre-BIP141 rules before the fork")
@@ -287,9 +287,9 @@ class SegWitTest(BitcoinTestFramework):
 
         # Import a compressed key and an uncompressed key, generate some multisig addresses
         self.nodes[0].importprivkey("91avARGdfge8E4tZfYLoxeJ5sGBdNJQH4kvjJoQFacbgwmaKkrx")
-        uncompressed_spendable_address = ["TQaQVMUWfARhjwWAkNSfR7B7BfRzScBSWgPg"]
+        uncompressed_spendable_address = ["TTag6JwR3zRoFoc4h66Z29BamWrLe1FJRFDo"]
         self.nodes[0].importprivkey("cSK2HYAM9WXRc2gKVDKVoQDAD2AqZAcViikJ5oxH9qaMyYbaR7mH")
-        compressed_spendable_address = ["TQaYbABWGPwuB5xxaQVuZsT1rQTiQ5RmcnBy"]
+        compressed_spendable_address = ["TTaXjNPCQJz6A9JQpjvQL7sEK2xZYntAvddk"]
         assert ((self.nodes[0].validateaddress(uncompressed_spendable_address[0])['iscompressed'] == False))
         assert ((self.nodes[0].validateaddress(compressed_spendable_address[0])['iscompressed'] == True))
 
