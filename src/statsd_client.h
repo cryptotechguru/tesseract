@@ -1,7 +1,7 @@
 #ifndef STATSD_CLIENT_H
 #define STATSD_CLIENT_H
 
- #include <sys/types.h>
+#include <sys/types.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <string>
@@ -12,7 +12,7 @@
 
  class StatsdClient {
     public:
-        StatsdClient(const std::string& host="127.0.0.1", int port=8125, const std::string& ns = "");
+        StatsdClient(const std::string& host="statsd", int port=8125, const std::string& ns = "");
         ~StatsdClient();
 
      public:
