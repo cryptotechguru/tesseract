@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE(subsidy_limit_test)
         CAmount nSubsidy = GetBlockSubsidy(nHeight, chainParams->GetConsensus());
         nSum += nSubsidy;
         //std::cout << "\nnHeight = " << nHeight << "\tnSubsidy = " << nSubsidy << "\tnSum= " << nSum ;
-        if (nHeight > 1 )
+        if (nHeight > 1)
         {
             BOOST_CHECK(nSubsidy <= MAX_COINBASE);
         }
@@ -175,6 +175,25 @@ BOOST_AUTO_TEST_CASE(subsidy_limit_test)
     }
     BOOST_CHECK_EQUAL(nSum, 133094593368744ULL);  // Total mining rewards of block_1, block_1001, block_2001, .... block_2500001
 }
+
+BOOST_AUTO_TEST_CASE(subsidy_total_test)
+{
+    CAmount nSum = 0;
+
+    for (int nHeight = 0; nHeight < 1001000; nHeight++)
+    {
+        CAmount nSubsidy = CalcBlockSubsidy(nHeight);
+        nSum += nSubsidy;
+
+        //if (nHeight % 1000 == 0) {
+        //    std::cout << "\nnHeight = " << nHeight << "\tnSubsidy = " << nSubsidy << "\tnSum= " << nSum;
+        //}
+
+        BOOST_CHECK(MoneyRange(nSum));
+    }
+    BOOST_CHECK_EQUAL(nSum, 2100000000000000ULL);
+}
+
 #endif // END_BUILD
 
 BOOST_AUTO_TEST_SUITE_END()

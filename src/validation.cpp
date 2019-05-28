@@ -55,6 +55,10 @@
 #define MICRO 0.000001
 #define MILLI 0.001
 
+static const CAmount BlockSubsidies[] = {
+#include "subsidy.h"
+};
+
 /**
  * Global state
  */
@@ -1145,6 +1149,21 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
         return error("ReadBlockFromDisk(CBlock&, CBlockIndex*): GetHash() doesn't match index for %s at %s",
                 pindex->ToString(), pindex->GetBlockPos().ToString());
     return true;
+}
+
+CAmount CalcBlockSubsidy(int nHeight)
+{
+    const int max = sizeof(BlockSubsidies) / sizeof(BlockSubsidies[0]);
+
+    if (nHeight < 0) {
+        return 0;
+    }
+
+    if (nHeight >= max) {
+        return 0;
+    }
+
+    return BlockSubsidies[nHeight];
 }
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
