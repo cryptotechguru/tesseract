@@ -55,10 +55,6 @@
 #define MICRO 0.000001
 #define MILLI 0.001
 
-static const CAmount BlockSubsidies[] = {
-#include "subsidy.h"
-};
-
 /**
  * Global state
  */
@@ -1151,19 +1147,27 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
     return true;
 }
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 CAmount CalcBlockSubsidy(int nHeight)
 {
-    const int max = sizeof(BlockSubsidies) / sizeof(BlockSubsidies[0]);
+    const int max = 1000000;
+    CAmount subsidy = 0;
 
-    if (nHeight < 0) {
-        return 0;
+    if (nHeight > 0 && nHeight <= max) {
+        double x = 2 * M_PI * nHeight / max;
+        double y = 1. - cos(x);
+        double z = y * MAX_MONEY;
+
+        z = z / max;
+        z = z + 0.5;
+            
+        subsidy = static_cast<CAmount>(z);
     }
 
-    if (nHeight >= max) {
-        return 0;
-    }
-
-    return BlockSubsidies[nHeight];
+    return subsidy;
 }
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)

@@ -191,7 +191,7 @@ BOOST_AUTO_TEST_CASE(subsidy_total_test)
 
         BOOST_CHECK(MoneyRange(nSum));
     }
-    BOOST_CHECK_EQUAL(nSum, 2100000000000000ULL);
+    BOOST_CHECK_EQUAL(nSum, MAX_MONEY);
 }
 
 #endif // END_BUILD
