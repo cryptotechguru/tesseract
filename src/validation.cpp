@@ -1153,20 +1153,14 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
 
 CAmount CalcBlockSubsidy(int nHeight)
 {
-    CAmount subsidy = 0;
-
-    if (nHeight > 0 && nHeight <= SUBSIDY_PERIOD) {
-        double x = 2 * M_PI * nHeight / SUBSIDY_PERIOD;
-        double y = 1. - cos(x);
-        double z = y * MAX_MONEY;
-
-        z = z / SUBSIDY_PERIOD;
-        z = z + 0.5;
-            
-        subsidy = static_cast<CAmount>(z);
+    if (nHeight < 0 || nHeight > SUBSIDY_PERIOD) {
+        return 0;
     }
 
-    return subsidy;
+    double x = 2 * M_PI * nHeight / SUBSIDY_PERIOD;
+    double y = (1. - cos(x)) * MAX_MONEY / SUBSIDY_PERIOD;
+
+    return static_cast<CAmount>(y + 0.5);
 }
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)

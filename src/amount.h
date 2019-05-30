@@ -31,7 +31,6 @@ static const CAmount MAX_MONEY = 21000000 * COIN;
 static const CAmount MAX_MONEY = 21000000 * COIN;
 static const int SUBSIDY_PERIOD = 1000000; // blocks
 static const CAmount GENESIS_BLOCK_REWARD =  0;
-//static const CAmount FIRST_BLOCK_REWARD = 131025772228310; // First BLock Reward = 1,000,000 + 2.1 * 10^7 / ( 1 + exp( 4.2 - (10^-5) * t ) ;   where t=1
 static const CAmount PREMINE_TARGET = 1000000 * COIN;
 #endif // END_BUILD 
 
