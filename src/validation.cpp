@@ -1151,14 +1151,14 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
 #define M_PI 3.14159265358979323846
 #endif
 
-CAmount CalcBlockSubsidy(int nHeight)
+CAmount CalcBlockSubsidy(int nHeight, int nInterval)
 {
-    if (nHeight < 0 || nHeight > SUBSIDY_PERIOD) {
+    if (nHeight < 0 || nHeight > nInterval) {
         return 0;
     }
 
-    double x = 2 * M_PI * nHeight / SUBSIDY_PERIOD;
-    double y = (1. - cos(x)) * MAX_MONEY / SUBSIDY_PERIOD;
+    double x = 2 * M_PI * nHeight / nInterval;
+    double y = (1. - cos(x)) * MAX_MONEY / nInterval;
 
     return static_cast<CAmount>(y + 0.5);
 }
@@ -1176,25 +1176,16 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     nSubsidy >>= halvings;
 #else  // BUILD_TESR
 
-    static CAmount premine = 0;
-    static int blockOffset = 0;
-    CAmount nSubsidy = GENESIS_BLOCK_REWARD;
+    CAmount nSubsidy = 0;
+    int nInterval = consensusParams.nSubsidyInterval;
 
     if (nHeight > 0)
     {
-        assert(PREMINE_TARGET < MAX_MONEY);
-
-        while (premine < PREMINE_TARGET) {
-            nSubsidy = CalcBlockSubsidy(blockOffset++);
-            premine += nSubsidy;
-            //std::cout << "\nnHeight = " << blockOffset << "\tnSubsidy = " << nSubsidy << "\premine= " << premine;
-        }
-
         if (nHeight == 1) {
-            nSubsidy = premine;
+            nSubsidy = consensusParams.nPremineActual;
         }
         else {
-            nSubsidy = CalcBlockSubsidy(nHeight + blockOffset - 2);
+            nSubsidy = CalcBlockSubsidy(nHeight + consensusParams.nPremineOffset - 1, nInterval);
         }
     }
 

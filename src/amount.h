@@ -25,14 +25,7 @@ static const CAmount CENT = 1000000;
  * for the creation of coins out of thin air modification could lead to a fork.
  * */
 
-#ifdef BUILD_BTC
 static const CAmount MAX_MONEY = 21000000 * COIN;
-#else  // BUILD_TESR
-static const CAmount MAX_MONEY = 21000000 * COIN;
-static const int SUBSIDY_PERIOD = 1000000; // blocks
-static const CAmount GENESIS_BLOCK_REWARD =  0;
-static const CAmount PREMINE_TARGET = 1000000 * COIN;
-#endif // END_BUILD 
 
 inline bool MoneyRange(const CAmount& nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 

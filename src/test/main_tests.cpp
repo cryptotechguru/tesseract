@@ -81,32 +81,34 @@ BOOST_AUTO_TEST_CASE(test_combiner_all)
 
 BOOST_AUTO_TEST_CASE(calc_subsidy_total_test)
 {
-    CAmount nSum = 0;
-    int buffer = SUBSIDY_PERIOD/1000;
+    for (int nInterval = 10; nInterval <= 1000000; nInterval *= 10) {
+        CAmount nSum = 0;
+        int buffer = nInterval/1000;
 
-    for (int nHeight = -buffer; nHeight < SUBSIDY_PERIOD + buffer; nHeight++)
-    {
-        CAmount nSubsidy = CalcBlockSubsidy(nHeight);
-        nSum += nSubsidy;
+        for (int nHeight = -buffer; nHeight < nInterval + buffer; nHeight++)
+        {
+            CAmount nSubsidy = CalcBlockSubsidy(nHeight, nInterval);
+            nSum += nSubsidy;
 
-        //if (nHeight % 1000 == 0) {
-        //    std::cout << "\nnHeight = " << nHeight << "\tnSubsidy = " << nSubsidy << "\tnSum= " << nSum;
-        //}
+            //if (buffer > 0 && nHeight % buffer == 0) {
+            //    std::cout << "\nnHeight = " << nHeight << "\tnSubsidy = " << nSubsidy << "\tnSum= " << nSum;
+            //}
 
-        BOOST_CHECK(MoneyRange(nSum));
+            BOOST_CHECK(MoneyRange(nSum));
+        }
+        BOOST_CHECK_EQUAL(nSum, MAX_MONEY);
     }
-    BOOST_CHECK_EQUAL(nSum, MAX_MONEY);
 }
 
-BOOST_AUTO_TEST_CASE(get_subsidy_total_test)
+void SubsidyTest(const Consensus::Params& consensusParams)
 {
-    const auto chainParams = CreateChainParams(CBaseChainParams::MAIN);
     CAmount nSum = 0;
-    int buffer = SUBSIDY_PERIOD / 1000;
+    int nInterval = consensusParams.nSubsidyInterval;
+    int buffer = nInterval / 1000;
 
-    for (int nHeight = -buffer; nHeight < SUBSIDY_PERIOD + buffer; nHeight++)
+    for (int nHeight = -buffer; nHeight < nInterval + buffer; nHeight++)
     {
-        CAmount nSubsidy = GetBlockSubsidy(nHeight, chainParams->GetConsensus());
+        CAmount nSubsidy = GetBlockSubsidy(nHeight, consensusParams);
         nSum += nSubsidy;
 
         //if (nHeight % 100000 == 0) {
@@ -117,15 +119,25 @@ BOOST_AUTO_TEST_CASE(get_subsidy_total_test)
             BOOST_CHECK_EQUAL(nSubsidy, 0);
         }
         else if (nHeight == 1) {
-            BOOST_CHECK_GE(nSubsidy, PREMINE_TARGET);
-        }
-        else {
-            BOOST_CHECK_LT(nSubsidy, PREMINE_TARGET);
+            BOOST_CHECK_GE(nSubsidy, consensusParams.nPremineTarget);
+            BOOST_CHECK_EQUAL(nSubsidy, consensusParams.nPremineActual);
         }
 
         BOOST_CHECK(MoneyRange(nSum));
     }
     BOOST_CHECK_EQUAL(nSum, MAX_MONEY);
+}
+
+BOOST_AUTO_TEST_CASE(get_subsidy_total_test)
+{
+    const auto mainParams = CreateChainParams(CBaseChainParams::MAIN);
+    SubsidyTest(mainParams->GetConsensus());
+
+    const auto testParams = CreateChainParams(CBaseChainParams::TESTNET);
+    SubsidyTest(testParams->GetConsensus());
+
+    const auto regtParams = CreateChainParams(CBaseChainParams::REGTEST);
+    SubsidyTest(regtParams->GetConsensus());
 }
 
 #endif // END_BUILD
