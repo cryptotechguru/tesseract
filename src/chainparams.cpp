@@ -666,7 +666,7 @@ public:
         strNetworkID = "regtest";
 
         consensus.nSubsidyInterval = 1000;
-        consensus.nPremineTarget = 0; 
+        consensus.nPremineTarget = 1 * COIN; 
         CalcPremine(consensus);
 
         consensus.BIP16Height = 0; // always enforce P2SH BIP16 on regtest
