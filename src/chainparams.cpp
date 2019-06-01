@@ -435,9 +435,9 @@ static void CalcPremine(Consensus::Params& params)
         params.nPremineOffset--;
     }
 
-    std::cout << "CalcPremine: target " << params.nPremineTarget << std::endl;
-    std::cout << "CalcPremine: actual " << params.nPremineActual << std::endl;
-    std::cout << "CalcPremine: offset " << params.nPremineOffset << std::endl;
+    //std::cout << "CalcPremine: target " << params.nPremineTarget << std::endl;
+    //std::cout << "CalcPremine: actual " << params.nPremineActual << std::endl;
+    //std::cout << "CalcPremine: offset " << params.nPremineOffset << std::endl;
 }
 
 /**
@@ -459,11 +459,6 @@ public:
         consensus.nSubsidyInterval = 1000000;
         consensus.nPremineTarget = 1000000 * COIN;
         CalcPremine(consensus);
-        //int premineOffset;
-        //int64_t premineActual;
-        //CalcPremine(consensus.nSubsidyInterval, consensus.nPremineTarget, premineOffset, premineActual);
-        //consensus.nPremineActual = premineActual;
-        //consensus.nPremineOffset = premineOffset;
 
         consensus.BIP16Height = 0;
         consensus.BIP34Height = 0;
@@ -648,10 +643,9 @@ public:
 
         // TESR_TODO: Update chainTxData 
         chainTxData = ChainTxData{
-            // Data as of block 000000000000033cfa3c975eb83ecf2bb4aaedf68e6d279f6ed2b427c64caff9 (height 1260526)
-            1516903490,
-            17082348,
-            0.09
+            0,
+            0,
+            0
         };
 
     }
@@ -666,7 +660,7 @@ public:
         strNetworkID = "regtest";
 
         consensus.nSubsidyInterval = 1000;
-        consensus.nPremineTarget = 1 * COIN; 
+        consensus.nPremineTarget = 1 * COIN; // The ListCoins unit tests requires a non-zero reward in the 1st block
         CalcPremine(consensus);
 
         consensus.BIP16Height = 0; // always enforce P2SH BIP16 on regtest
