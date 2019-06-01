@@ -371,9 +371,9 @@ static void AddKey(CWallet& wallet, const CKey& key)
 }
 
 #ifndef BUILD_BTC
-static const CAmount    BLOCK_100_REWARD = 1134800409;   // Reward for block #100 in RegTest (equivalent to block #140,000 in MainNet)
-static const CAmount    BLOCK_101_REWARD = 1148941487;   // Reward for block #101 in RegTest (equivalent to block #141,400 in MainNet)
-static const CAmount      BLOCK_1_REWARD =  207259374;   // Reward for block #  1 in RegTest (equivalent to block #  1,400 in MainNet)
+static const CAmount BLOCK_100_REWARD = 408853440007; // Reward for block #100 in RegTest (equivalent to block #140,000 in MainNet)
+static const CAmount BLOCK_101_REWARD = 416709331771; // Reward for block #101 in RegTest (equivalent to block #141,400 in MainNet)
+static const CAmount BLOCK_001_REWARD = 207259374;    // Reward for block #  1 in RegTest (equivalent to block #  1,400 in MainNet)
 #endif // END_BUILD
 
 BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
@@ -417,7 +417,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 #ifdef BUILD_BTC
         BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), 50 * COIN);
 #else  // BUILD_TESR
-        BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), BLOCK_100_REWARD);
+        BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), BLOCK_101_REWARD);
 #endif // END_BUILD
     }
 
@@ -690,7 +690,7 @@ BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
 #ifdef BUILD_BTC
     BOOST_CHECK_EQUAL(50 * COIN, wallet->GetAvailableBalance());
 #else  // BUILD_TESR
-    BOOST_CHECK_EQUAL(BLOCK_1_REWARD, wallet->GetAvailableBalance());
+    BOOST_CHECK_EQUAL(BLOCK_001_REWARD, wallet->GetAvailableBalance());
 #endif // END_BUILD
 
     // Add a transaction creating a change address, and confirm ListCoins still
