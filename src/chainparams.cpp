@@ -660,7 +660,7 @@ public:
         strNetworkID = "regtest";
 
         consensus.nSubsidyInterval = 1000;
-        consensus.nPremineTarget = 1 * COIN; // The ListCoins unit tests requires a non-zero reward in the 1st block
+        consensus.nPremineTarget = 100 * COIN; // The automated tests requires a non-zero reward in the 1st block
         CalcPremine(consensus);
 
         consensus.BIP16Height = 0; // always enforce P2SH BIP16 on regtest

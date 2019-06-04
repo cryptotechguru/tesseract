@@ -371,9 +371,9 @@ static void AddKey(CWallet& wallet, const CKey& key)
 }
 
 #ifndef BUILD_BTC
-static const CAmount BLOCK_100_REWARD = 408853440007; // Reward for block #100 in RegTest (equivalent to block #140,000 in MainNet)
-static const CAmount BLOCK_101_REWARD = 416709331771; // Reward for block #101 in RegTest (equivalent to block #141,400 in MainNet)
-static const CAmount BLOCK_001_REWARD = 207259374;    // Reward for block #  1 in RegTest (equivalent to block #  1,400 in MainNet)
+static const CAmount BLOCK_100_REWARD = 465229166709; // Reward for block #100 in RegTest (equivalent to block #140,000 in MainNet)
+static const CAmount BLOCK_101_REWARD = 473543573583; // Reward for block #101 in RegTest (equivalent to block #141,400 in MainNet)
+static const CAmount BLOCK_001_REWARD = 11811825640;  // Reward for block #  1 in RegTest (equivalent to block #  1,400 in MainNet)
 #endif // END_BUILD
 
 BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
