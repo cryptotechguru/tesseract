@@ -16,7 +16,7 @@ import random
 import re
 from subprocess import CalledProcessError
 import time
-from math import exp
+import math
 
 from . import coverage
 from .authproxy import AuthServiceProxy, JSONRPCException
@@ -465,14 +465,43 @@ def make_change(from_node, amount_in, amount_out, fee):
         outputs[from_node.getnewaddress()] = change
     return outputs
 
+def block_subsidy(blkHeight):
+    N = 1000
+    COIN = 100000000
+    MAX = 21000000 * COIN
+
+    if blkHeight < 0 or blkHeight > N:
+        return 0
+    
+    x = 2 * math.pi * blkHeight/N
+    y = (1. - math.cos(x))
+
+    return int(y * MAX/N + 0.5)
+
 def block_reward(blkHeight):
     """
-    Calculate block reward.
+    Calculate block reward in coins (not sats) for regtest chain.
     """
-    nSubsidyAccelerationFactor = 1400
-    blkHeight *= nSubsidyAccelerationFactor
-    reward = (210 * exp(4.2 - 0.00001 * blkHeight)) / (1 + exp(-0.00001 * (blkHeight - 420000))) ** 2
-    return Decimal(reward).quantize(Decimal('0.00000001'), rounding=ROUND_DOWN)
+    COIN = 100000000
+    TARGET = 100 * COIN
+    PREMINE = 0
+    OFFSET = -1
+
+    while PREMINE < TARGET:
+        OFFSET += 1
+        PREMINE += block_subsidy(OFFSET)
+
+    logger.info("premine {} offset {}".format(PREMINE, OFFSET))
+
+    if blkHeight == 1:
+        subsidy = PREMINE
+    else:
+        subsidy = block_subsidy(blkHeight + OFFSET - 1)
+
+    reward = Decimal(1. * subsidy/COIN).quantize(Decimal('0.00000001'))
+
+    logger.info("block_reward({}) {} {}".format(blkHeight, subsidy, reward))
+    return reward
 
 def acc_block_rewards(firstBlock, lastBlock):
     return sum([block_reward(x) for x in range(firstBlock, lastBlock + 1)])
