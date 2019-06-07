@@ -659,9 +659,8 @@ public:
     CRegTestParams() {
         strNetworkID = "regtest";
 
-        consensus.nSubsidyInterval = 1000;
-        consensus.nPremineTarget = 100 * COIN; // The automated tests requires a non-zero reward in the 1st block
-        CalcPremine(consensus);
+        consensus.nSubsidyInterval = 0;
+        consensus.nPremineTarget = 0; 
 
         consensus.BIP16Height = 0; // always enforce P2SH BIP16 on regtest
         consensus.BIP34Height = 100000000; // BIP34 has not activated on regtest (far in the future so block v1 are not rejected in tests)

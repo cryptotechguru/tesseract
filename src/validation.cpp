@@ -1181,11 +1181,16 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 
     if (nHeight > 0)
     {
-        if (nHeight == 1) {
-            nSubsidy = consensusParams.nPremineActual;
+        if (nInterval == 0) { // regtest
+            nSubsidy = 50 * COIN;
         }
         else {
-            nSubsidy = CalcBlockSubsidy(nHeight + consensusParams.nPremineOffset - 1, nInterval);
+            if (nHeight == 1) {
+                nSubsidy = consensusParams.nPremineActual;
+            }
+            else {
+                nSubsidy = CalcBlockSubsidy(nHeight + consensusParams.nPremineOffset - 1, nInterval);
+            }
         }
     }
 
