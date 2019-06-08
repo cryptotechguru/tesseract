@@ -79,102 +79,68 @@ BOOST_AUTO_TEST_CASE(test_combiner_all)
 }
 #else  // BUILD_TESR
 
-static const CAmount    MAX_COINBASE = 52.5 * COIN;
-
-static void TestBlockSubsidyCurve(const Consensus::Params& consensusParams)
+BOOST_AUTO_TEST_CASE(calc_subsidy_total_test)
 {
-    // Pre-calculated block mining reward for test
-    static std::map<int, CAmount> blockNumToMiningReward = {
-                                                            std::pair<int, CAmount>(0       , GENESIS_BLOCK_REWARD),
-                                                            std::pair<int, CAmount>(1       , FIRST_BLOCK_REWARD),
-                                                            std::pair<int, CAmount>(52500   , 506341245),
-                                                            std::pair<int, CAmount>(105000  , 827458486),
-                                                            std::pair<int, CAmount>(157500  , 1322666848),
-                                                            std::pair<int, CAmount>(210000  , 2041088800),
-                                                            std::pair<int, CAmount>(262500  , 2983908560),
-                                                            std::pair<int, CAmount>(315000  , 4032576406),
-                                                            std::pair<int, CAmount>(367500  , 4904234072),
-                                                            std::pair<int, CAmount>(419999  , 5249999999),
-                                                            std::pair<int, CAmount>(420000  , 5250000000),
-                                                            std::pair<int, CAmount>(420001  , 5249999999),
-                                                            std::pair<int, CAmount>(472500  , 4904234072),
-                                                            std::pair<int, CAmount>(525000  , 4032576406),
-                                                            std::pair<int, CAmount>(577500  , 2983908560),
-                                                            std::pair<int, CAmount>(630000  , 2041088800),
-                                                            std::pair<int, CAmount>(682500  , 1322666848),
-                                                            std::pair<int, CAmount>(735000  , 827458486),
-                                                            std::pair<int, CAmount>(787500  , 506341245),
-                                                            std::pair<int, CAmount>(840000  , 305670953),
-                                                            std::pair<int, CAmount>(892500  , 183023491),
-                                                            std::pair<int, CAmount>(945000  , 109050395),
-                                                            std::pair<int, CAmount>(997500  , 64785313),
-                                                            std::pair<int, CAmount>(1050000 , 38421164),
-                                                            std::pair<int, CAmount>(1102500 , 22762315),
-                                                            std::pair<int, CAmount>(1155000 , 13477113),
-                                                            std::pair<int, CAmount>(1207500 , 7976642),
-                                                            std::pair<int, CAmount>(1260000 , 4720090),
-                                                            std::pair<int, CAmount>(1312500 , 2792707),
-                                                            std::pair<int, CAmount>(1365000 , 1652220),
-                                                           };
- 
-    std::map<int, CAmount>::iterator itr_Heights = blockNumToMiningReward.begin();
-    std::map<int, CAmount>::iterator itr_HeightMiningRewardFinder;
+    for (int nInterval = 10; nInterval <= 1000000; nInterval *= 10) {
+        CAmount nSum = 0;
+        int buffer = nInterval/1000;
 
-    while (itr_Heights != blockNumToMiningReward.end())
-    {
-        int nHeightTest = itr_Heights->first / consensusParams.nSubsidyAccelerationFactor;
-
-        itr_HeightMiningRewardFinder = blockNumToMiningReward.find(nHeightTest);
-
-        if (itr_HeightMiningRewardFinder != blockNumToMiningReward.end())
+        for (int nHeight = -buffer; nHeight < nInterval + buffer; nHeight++)
         {
-            CAmount nSubsidy = GetBlockSubsidy(nHeightTest, consensusParams);
-            if (nHeightTest > 1)
-            {
-                BOOST_CHECK(nSubsidy <= MAX_COINBASE);
-            }
-//            if (nSubsidy != itr_HeightMiningRewardFinder->second)
-//                std::cout << "\nnHeight = " << nHeightTest << "\tnSubC = " << nSubsidy << "\tnSubR= " << itr_HeightMiningRewardFinder->second;
-            BOOST_CHECK_EQUAL(nSubsidy, itr_HeightMiningRewardFinder->second);
+            CAmount nSubsidy = CalcBlockSubsidy(nHeight, nInterval);
+            nSum += nSubsidy;
+
+            //if (buffer > 0 && nHeight % buffer == 0) {
+            //    std::cout << "\nnHeight = " << nHeight << "\tnSubsidy = " << nSubsidy << "\tnSum= " << nSum;
+            //}
+
+            BOOST_CHECK(MoneyRange(nSum));
         }
-        ++ itr_Heights;
+        BOOST_CHECK_EQUAL(nSum, MAX_MONEY);
     }
 }
 
-BOOST_AUTO_TEST_CASE(block_subsidy_test)
-{
-    const auto mainchainParams = CreateChainParams(CBaseChainParams::MAIN);
-    BOOST_CHECK_EQUAL(mainchainParams->GetConsensus().nSubsidyAccelerationFactor, 1);   // As in mainNet
-    TestBlockSubsidyCurve(mainchainParams->GetConsensus());
-
-    const auto testchainParams = CreateChainParams(CBaseChainParams::TESTNET);          // As in testNet
-    BOOST_CHECK_EQUAL(testchainParams->GetConsensus().nSubsidyAccelerationFactor, 1);
-    // no need to run the TestBlockSubsidyCurve for testNet as its similar to mainNet
-
-    const auto regchainParams = CreateChainParams(CBaseChainParams::REGTEST);
-    BOOST_CHECK_EQUAL(regchainParams->GetConsensus().nSubsidyAccelerationFactor, 1400); // As in regTest
-    TestBlockSubsidyCurve(regchainParams->GetConsensus());
-}
-
-BOOST_AUTO_TEST_CASE(subsidy_limit_test)
+void SubsidyTest(const Consensus::Params& consensusParams)
 {
     CAmount nSum = 0;
-    const auto chainParams = CreateChainParams(CBaseChainParams::MAIN);
-    //std::cout << "\n\n   subsidy_limit_test ( " << MAX_COINBASE <<" ) " << "   Acc.Factor = " << chainParams->GetConsensus().nSubsidyAccelerationFactor;
+    int nInterval = consensusParams.nSubsidyInterval;
+    int buffer = nInterval / 1000;
 
-    for (int nHeight = 1; nHeight < 2500002; nHeight += 1000)
+    for (int nHeight = -buffer; nHeight < nInterval + buffer; nHeight++)
     {
-        CAmount nSubsidy = GetBlockSubsidy(nHeight, chainParams->GetConsensus());
+        CAmount nSubsidy = GetBlockSubsidy(nHeight, consensusParams);
         nSum += nSubsidy;
-        //std::cout << "\nnHeight = " << nHeight << "\tnSubsidy = " << nSubsidy << "\tnSum= " << nSum ;
-        if (nHeight > 1 )
-        {
-            BOOST_CHECK(nSubsidy <= MAX_COINBASE);
+
+        //if (nHeight % 100000 == 0) {
+        //    std::cout << "\nnHeight = " << nHeight << "\tnSubsidy = " << nSubsidy << "\tnSum= " << nSum;
+        //}
+
+        if (nHeight == 0) {
+            BOOST_CHECK_EQUAL(nSubsidy, 0);
         }
+        else if (nHeight == 1) {
+            BOOST_CHECK_GE(nSubsidy, consensusParams.nPremineTarget);
+            BOOST_CHECK_EQUAL(nSubsidy, consensusParams.nPremineActual);
+        }
+
         BOOST_CHECK(MoneyRange(nSum));
     }
-    BOOST_CHECK_EQUAL(nSum, 133094593368744ULL);  // Total mining rewards of block_1, block_1001, block_2001, .... block_2500001
+    BOOST_CHECK_EQUAL(nSum, MAX_MONEY);
 }
+
+BOOST_AUTO_TEST_CASE(get_subsidy_total_test)
+{
+    const auto mainParams = CreateChainParams(CBaseChainParams::MAIN);
+    SubsidyTest(mainParams->GetConsensus());
+
+    const auto testParams = CreateChainParams(CBaseChainParams::TESTNET);
+    SubsidyTest(testParams->GetConsensus());
+
+    // TESR_TODO: revisit?
+    //const auto regtParams = CreateChainParams(CBaseChainParams::REGTEST);
+    //SubsidyTest(regtParams->GetConsensus());
+}
+
 #endif // END_BUILD
 
 BOOST_AUTO_TEST_SUITE_END()
