@@ -29,10 +29,10 @@ class TxnMallTest(BitcoinTestFramework):
         else:
             output_type="legacy"
 
-        # All nodes should start with mining rewards for 25 blocks (was: 1,250 BTC):
-        starting_balance = [acc_block_rewards(i, i + 24) for i in range(1, 101, 25)]
+        # All nodes should start with mining rewards for 25 blocks
+        starting_balance = 1250
         for i in range(4):
-            assert_equal(self.nodes[i].getbalance(), starting_balance[i])
+            assert_equal(self.nodes[i].getbalance(), starting_balance)
             self.nodes[i].getnewaddress("")  # bug workaround, coins generated assigned to first getnewaddress!
 
         # Assign coins to foo and bar accounts:
@@ -47,7 +47,7 @@ class TxnMallTest(BitcoinTestFramework):
         fund_bar_tx = self.nodes[0].gettransaction(fund_bar_txid)
 
         assert_equal(self.nodes[0].getbalance(""),
-                     starting_balance[0] - 87 - 2 + fund_foo_tx["fee"] + fund_bar_tx["fee"])
+                     starting_balance - 87 - 2 + fund_foo_tx["fee"] + fund_bar_tx["fee"])
 
         # Coins are sent to node1_address
         node1_address = self.nodes[1].getnewaddress("from0")
@@ -91,7 +91,7 @@ class TxnMallTest(BitcoinTestFramework):
 
         # Node0's balance should be starting balance, plus 50BTC for another
         # matured block, minus tx1 and tx2 amounts, and minus transaction fees:
-        expected = starting_balance[0] + fund_foo_tx["fee"] + fund_bar_tx["fee"]
+        expected = starting_balance + fund_foo_tx["fee"] + fund_bar_tx["fee"]
         if self.options.mine_block: expected += block_reward(101)
         expected += tx1["amount"] + tx1["fee"]
         expected += tx2["amount"] + tx2["fee"]
@@ -151,7 +151,7 @@ class TxnMallTest(BitcoinTestFramework):
         # "bar" should have been debited by (possibly unconfirmed) tx2
         assert_equal(self.nodes[0].getbalance("bar", 0), 2 + tx2["amount"] + tx2["fee"])
         # "" should have starting balance, less funding txes, plus subsidies
-        assert_equal(self.nodes[0].getbalance("", 0), starting_balance[0]
+        assert_equal(self.nodes[0].getbalance("", 0), starting_balance
                                                                 - 87
                                                                 + fund_foo_tx["fee"]
                                                                 - 2

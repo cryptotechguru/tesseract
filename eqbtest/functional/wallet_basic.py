@@ -151,7 +151,7 @@ class WalletTest(BitcoinTestFramework):
         self.nodes[1].generate(1)
         self.sync_all([self.nodes[0:3]])
 
-        expectedBalance = Decimal('5021.70511340')
+        expectedBalance = Decimal('99.94000000')
 
         assert_equal(self.nodes[0].getbalance(), 0)
         assert_equal(self.nodes[2].getbalance(), expectedBalance)
