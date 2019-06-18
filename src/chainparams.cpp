@@ -386,7 +386,7 @@ static CBlock MineGenesisBlock(uint32_t time, Consensus::Params& consensus)
     unsigned int nPoWTarget = UintToArith256(consensus.powLimit).GetCompact();
     bool filter = true;
     for (uint32_t nonce = 0; ; nonce++) {
-        genesis = CreateGenesisBlock(time, nonce, nPoWTarget, 1, GENESIS_BLOCK_REWARD);
+        genesis = CreateGenesisBlock(time, nonce, nPoWTarget, 1, 0);
         consensus.hashGenesisBlock = genesis.GetHash();
         if(nonce % 1000 == 0)
             std::cout << ".";
@@ -405,6 +405,41 @@ void CChainParams::UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64
     consensus.vDeployments[d].nTimeout = nTimeout;
 }
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+static CAmount XCalcBlockSubsidy(int nHeight, int nInterval)
+{
+    if (nHeight < 0 || nHeight > nInterval) {
+        return 0;
+    }
+
+    double x = 2 * M_PI * nHeight / nInterval;
+    double y = (1. - cos(x)) * MAX_MONEY / nInterval;
+
+    return static_cast<CAmount>(y + 0.5);
+}
+
+static void CalcPremine(Consensus::Params& params)
+{
+    params.nPremineOffset = 0;
+    params.nPremineActual = 0;
+
+    if (params.nPremineTarget > 0) {
+        while (params.nPremineActual < params.nPremineTarget) {
+            // TESR_TODO: figure out why tesseract-tx won't link if we call CalcBlockSubsidy() here
+            // instead of the copy above.
+            params.nPremineActual += XCalcBlockSubsidy(params.nPremineOffset++, params.nSubsidyInterval);
+        }
+        params.nPremineOffset--;
+    }
+
+    //std::cout << "CalcPremine: target " << params.nPremineTarget << std::endl;
+    //std::cout << "CalcPremine: actual " << params.nPremineActual << std::endl;
+    //std::cout << "CalcPremine: offset " << params.nPremineOffset << std::endl;
+}
+
 /**
  * Main network
  */
@@ -420,7 +455,11 @@ class CMainParams : public CChainParams {
 public:
     CMainParams() {
         strNetworkID = "main";
-        consensus.nSubsidyAccelerationFactor = 1;
+
+        consensus.nSubsidyInterval = 1000000;
+        consensus.nPremineTarget = 1000000 * COIN;
+        CalcPremine(consensus);
+
         consensus.BIP16Height = 0;
         consensus.BIP34Height = 0;
         consensus.BIP34Hash = uint256S("0x0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8");
@@ -469,7 +508,7 @@ public:
         nPruneAfterHeight = 100000;
 
         // Thu Feb 21 16:40:13 2019 GMT
-        genesis = CreateGenesisBlock(1550767213, 19525, 0x1f00ffff, 1, GENESIS_BLOCK_REWARD);
+        genesis = CreateGenesisBlock(1550767213, 19525, 0x1f00ffff, 1, 0);
         //genesis = MineGenesisBlock(1550767213, consensus);
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0000ab3a641e901eaea9cd5973308f810421a7acdae5defd8768083322f30e28"));
@@ -521,7 +560,11 @@ class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
         strNetworkID = "test";
-        consensus.nSubsidyAccelerationFactor = 1;
+
+        consensus.nSubsidyInterval = 1000000;
+        consensus.nPremineTarget = 1000000 * COIN;
+        CalcPremine(consensus);
+
         consensus.BIP16Height = 0;
         consensus.BIP34Height = 0;
         consensus.BIP34Hash = uint256S("0x0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8");
@@ -565,7 +608,7 @@ public:
         nPruneAfterHeight = 1000;
 
         // timestamp 1556209241 = 2019.04.25 12:20:41 EST
-        genesis = CreateGenesisBlock(1556209241, 25975, 0x1f00ffff, 1, GENESIS_BLOCK_REWARD);
+        genesis = CreateGenesisBlock(1556209241, 25975, 0x1f00ffff, 1, 0);
         //genesis = MineGenesisBlock(1556209241, consensus); // Use MineGenesisBlock if any parameters change
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("000090fb7731c1704a8af18923e0126caef0816435064447358774e5323d4348"));
@@ -600,10 +643,9 @@ public:
 
         // TESR_TODO: Update chainTxData 
         chainTxData = ChainTxData{
-            // Data as of block 000000000000033cfa3c975eb83ecf2bb4aaedf68e6d279f6ed2b427c64caff9 (height 1260526)
-            1516903490,
-            17082348,
-            0.09
+            0,
+            0,
+            0
         };
 
     }
@@ -616,7 +658,10 @@ class CRegTestParams : public CChainParams {
 public:
     CRegTestParams() {
         strNetworkID = "regtest";
-        consensus.nSubsidyAccelerationFactor = 1400;
+
+        consensus.nSubsidyInterval = 0;
+        consensus.nPremineTarget = 0; 
+
         consensus.BIP16Height = 0; // always enforce P2SH BIP16 on regtest
         consensus.BIP34Height = 100000000; // BIP34 has not activated on regtest (far in the future so block v1 are not rejected in tests)
         consensus.BIP34Hash = uint256();
@@ -653,7 +698,7 @@ public:
         nPruneAfterHeight = 1000;
 
         // timestamp 1543165379 = 2018.11.25 12:02:59 EST
-        genesis = CreateGenesisBlock(1543165379, 1, 0x207fffff, 1, GENESIS_BLOCK_REWARD);
+        genesis = CreateGenesisBlock(1543165379, 1, 0x207fffff, 1, 0);
         //genesis = MineGenesisBlock(1543165379, consensus); // Use MineGenesisBlock if any parameters change
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("46ee01ff4a87d884bb8ebe9ff87c369e6ee3edf57fa0a64d797adc98f35224a3"));

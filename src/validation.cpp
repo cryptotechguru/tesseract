@@ -1171,6 +1171,22 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
     return true;
 }
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+CAmount CalcBlockSubsidy(int nHeight, int nInterval)
+{
+    if (nHeight < 0 || nHeight > nInterval) {
+        return 0;
+    }
+
+    double x = 2 * M_PI * nHeight / nInterval;
+    double y = (1. - cos(x)) * MAX_MONEY / nInterval;
+
+    return static_cast<CAmount>(y + 0.5);
+}
+
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
 #ifdef BUILD_BTC
@@ -1184,19 +1200,21 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     nSubsidy >>= halvings;
 #else  // BUILD_TESR
 
-    CAmount nSubsidy = GENESIS_BLOCK_REWARD;
+    CAmount nSubsidy = 0;
+    int nInterval = consensusParams.nSubsidyInterval;
+
     if (nHeight > 0)
     {
-        nHeight *= consensusParams.nSubsidyAccelerationFactor; // TESR_TODO: Is it assumed nHeight is a 32-bit int? why isn't it unsigned?
-
-        if (nHeight == 1)
-        {
-            nSubsidy = FIRST_BLOCK_REWARD;
+        if (nInterval == 0) { // regtest
+            nSubsidy = 50 * COIN;
         }
-        else
-        {
-            long double aux = 1.0 + expm1(4.2 - nHeight / 100000.0);
-            nSubsidy = 210 * aux / powl((1 + aux), 2) * COIN;
+        else {
+            if (nHeight == 1) {
+                nSubsidy = consensusParams.nPremineActual;
+            }
+            else {
+                nSubsidy = CalcBlockSubsidy(nHeight + consensusParams.nPremineOffset - 1, nInterval);
+            }
         }
     }
 

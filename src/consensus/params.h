@@ -52,7 +52,10 @@ struct Params {
 #ifdef BUILD_BTC
     int nSubsidyHalvingInterval;
 #else  // BUILD_TESR
-    int nSubsidyAccelerationFactor;
+    int nSubsidyInterval;
+    int64_t nPremineTarget;
+    int64_t nPremineActual;
+    int nPremineOffset;
 #endif // END_BUILD
     /** Block height at which BIP16 becomes active */
     int BIP16Height;
