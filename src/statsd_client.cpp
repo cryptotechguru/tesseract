@@ -239,12 +239,14 @@ void StatsdClient::cleanup(string& key)
 
  int StatsdClient::send(const string &message)
 {
+    LogPrintf("Statsd send '%s'\n", message);
     int ret = init();
     if ( ret )
     {
         return ret;
     }
     ret = sendto(d->sock, message.data(), message.size(), 0, (struct sockaddr *) &d->server, sizeof(d->server));
+    LogPrintf("Statsd sent %d", ret);
     if ( ret == -1) {
         snprintf(d->errmsg, sizeof(d->errmsg),
                 "sendto server fail, host=%s:%d, err=%m", d->host.c_str(), d->port);
